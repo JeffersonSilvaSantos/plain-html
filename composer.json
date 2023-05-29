@@ -1,0 +1,22 @@
+{
+  "name": "outline/plain-html",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "jefferson Silva",
+      "email": "jeffersonprintsilva@gmail.com"
+    }
+  ],
+  "keywords": [
+    "plain html, plain-html"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Outline\\Plain\\Html\\": "src/"
+    }
+  },
+  "require": {
+  }
+}
