@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Outline\Plain\Html\Core\Abstraction;
 
 use Outline\Plain\Html\Core\Enumeration\EnumAttribute;
 use Outline\Plain\Html\Core\Enumeration\EnumInput;
 
+/**
+ * @author Jefferson Silva Santos
+ */
 abstract class AbstractAttribute
 {
     protected EnumAttribute $attribute;

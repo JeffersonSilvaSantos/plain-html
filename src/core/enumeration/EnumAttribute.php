@@ -9,6 +9,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
  */
 enum EnumAttribute: string
 {
+
     case GLOBAL_ATT_ID              = "id";
     case GLOBAL_ATT_ACCESSKEY       = "accesskey";
     case GLOBAL_ATT_AUTOCAPITALIZE  = "autocapitalize";

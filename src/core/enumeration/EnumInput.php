@@ -9,6 +9,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
  */
 enum EnumInput: string
 {
+
     case INPUT_TYPE_BUTTON         = "button";
     case INPUT_TYPE_CHECKBOX       = "checkbox";
     case INPUT_TYPE_COLOR          = "color";

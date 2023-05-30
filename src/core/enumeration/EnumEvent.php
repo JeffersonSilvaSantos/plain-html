@@ -9,6 +9,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
  */
 enum EnumEvent: string
 {
+
     case HTML_EVENT_ONABORT             = "onabort";
     case HTML_EVENT_ONAUTOCOMPLETE      = "onautocomplete";
     case HTML_EVENT_ONAUTOCOMPLETEERROR = "onautocompleteerror";
