@@ -11,6 +11,7 @@ use Outline\Plain\Html\Core\Enumeration\EnumElement;
  */
 abstract class AbstractElement
 {
+
     /**
      * @var EnumElement
      */

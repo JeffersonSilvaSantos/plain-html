@@ -9,6 +9,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
  */
 enum EnumElement: string
 {
+
     case HTML_A          = "a";
     case HTML_ABBR       = "abbr";
     case HTML_ADDRESS    = "address";

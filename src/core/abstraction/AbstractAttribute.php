@@ -1,19 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Outline\Plain\Html\Core\Abstraction;
 
 use Outline\Plain\Html\Core\Enumeration\EnumAttribute;
 use Outline\Plain\Html\Core\Enumeration\EnumInput;
 
+/**
+ * @author Jefferson Silva Santos
+ */
 abstract class AbstractAttribute
 {
-    protected EnumAttribute $attribute;
+    /**
+     * @var string
+     */
+    protected string $attribute;
 
-    protected string|EnumInput $value;
+    /**
+     * @var string
+     */
+    protected string $value;
 
-    public function __construct(EnumAttribute $attribute, string|EnumInput $value)
+    /**
+     * @param EnumAttribute $attribute
+     * @param string $value
+     */
+    public function __construct(EnumAttribute $attribute, string $value)
     {
-        $this->attribute = $attribute;
+        $this->attribute = $attribute->value;
         $this->value = $value;
     }
 
