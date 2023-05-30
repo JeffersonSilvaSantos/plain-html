@@ -41,14 +41,19 @@ trait CheckAttribute
 
     /**
      * @param EnumAttribute $attribute
-     * @param string|int|bool|EnumInput $value
+     * @param string|int $value
      * @return string
      */
-    protected function filter_value(EnumAttribute $attribute, string|int|bool|EnumInput $value): string
+    protected function filter_value(EnumAttribute $attribute, string|int $value): string
     {
+
         return match ($attribute->value) {
-            EnumAttribute::ATT_TYPE->value => $value instanceof EnumInput ? $value->value : $value,
-            default => $value
+            EnumAttribute::ATT_AUTOCOMPLETE->value => $value ? "on" : "off",
+            EnumAttribute::ATT_SIZE->value,
+                EnumAttribute::ATT_MAXLENGTH->value,
+                EnumAttribute::ATT_MIN->value,
+                EnumAttribute::ATT_MINLENGTH->value => is_numeric($value)? "$value" : "0",
+            default => "$value"
         };
     }
 

@@ -23,13 +23,18 @@ class Attribute extends AbstractAttribute
     /**
      * @var string
      */
+    private string $separator;
+
+    /**
+     * @var string
+     */
     private string $attribute_value;
 
     /**
      * @param EnumAttribute $attribute
-     * @param string|int|bool|EnumInput $value
+     * @param string|int $value
      */
-    public function __construct(EnumAttribute $attribute, string|int|bool|EnumInput $value)
+    public function __construct(EnumAttribute $attribute, string|int $value)
     {
         $this->config_attribute($attribute,$value);
         parent::__construct($attribute, $this->attribute_value);
@@ -37,11 +42,12 @@ class Attribute extends AbstractAttribute
 
     /**
      * @param EnumAttribute $attribute
-     * @param string|int|bool|EnumInput $value
+     * @param string|int $value
      * @return void
      */
-    private function config_attribute(EnumAttribute $attribute, string|int|bool|EnumInput $value): void
+    private function config_attribute(EnumAttribute $attribute, string|int $value): void
     {
+        $this->separator = "=";
         $this->attribute_name = $attribute->value;
         $this->attribute_value = $this->filter_value($attribute, $value);
     }
@@ -52,6 +58,6 @@ class Attribute extends AbstractAttribute
     public function attribute(): string
     {
         if (!$this->receive_value($this->attribute_name)) return $this->attribute_name;
-        return "";
+        return $this->attribute_name.$this->separator."\"$this->attribute_value\"";
     }
 }
