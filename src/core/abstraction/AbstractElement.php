@@ -34,6 +34,7 @@ abstract class AbstractElement
     {
         $this->enumElement = $enumElement;
         $this->open_element = "<$enumElement->value";
+
         $this->close_element = $this->define_closing_element($enumElement);
     }
 
@@ -41,7 +42,7 @@ abstract class AbstractElement
      * @param EnumElement $element
      * @return string in this format "empty" or "</element>" if there is a closure
      */
-    protected function define_closing_element(EnumElement $element): string
+    private function define_closing_element(EnumElement $element): string
     {
         return in_array($element->name, [
             EnumElement::HTML_FORM->name,
@@ -53,16 +54,9 @@ abstract class AbstractElement
             EnumElement::HTML_ARTICLE->name,
             EnumElement::HTML_ASIDE->name,
             EnumElement::HTML_DIV->name,
-            EnumElement::HTML_NAV->value
+            EnumElement::HTML_NAV->name,
+            EnumElement::HTML_TITLE->name
         ]) ? "</$element->value>" : "";
-    }
-
-    /**
-     * @return string in this format "empty" or "<element".
-     */
-    protected function open_element(): string
-    {
-        return $this->open_element;
     }
 
     /**
@@ -76,6 +70,19 @@ abstract class AbstractElement
             $attributes .= " ".$item->attribute();
         }
         return $attributes;
+    }
+
+    /**
+     * @return string in this format "empty" or "<element".
+     */
+    protected function open_element(): string
+    {
+        return $this->open_element;
+    }
+
+    protected function close(): string
+    {
+        return ">";
     }
 
     /**
