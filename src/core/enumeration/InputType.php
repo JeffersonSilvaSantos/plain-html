@@ -7,7 +7,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
 /**
  * @author Jefferson Silva Santos
  */
-enum EnumInput: string
+enum InputType: string
 {
 
     case INPUT_TYPE_BUTTON         = "button";

@@ -7,7 +7,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
 /**
  * @author Jefferson Silva Santos
  */
-enum EnumAttribute: string
+enum AttributeName: string
 {
 
     case GLOBAL_ATT_ID              = "id";
@@ -40,6 +40,7 @@ enum EnumAttribute: string
     case GLOBAL_ATT_TABINDEX        = "tabindex";
     case GLOBAL_ATT_TITLE           = "title";
     case GLOBAL_ATT_TRANSLATE       = "translate";
+    case ATT_CHECKED                = "checked";
     case ATT_ACCEPT                 = "accept";
     case ATT_AUTOCOMPLETE           = "autocomplete";
     case ATT_CAPTURE                = "capture";

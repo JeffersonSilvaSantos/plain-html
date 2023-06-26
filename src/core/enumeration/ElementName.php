@@ -7,7 +7,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
 /**
  * @author Jefferson Silva Santos
  */
-enum EnumElement: string
+enum ElementName: string
 {
 
     case HTML_A          = "a";

@@ -7,7 +7,7 @@ namespace Outline\Plain\Html\Core\Enumeration;
 /**
  * @author Jefferson Silva Santos
  */
-enum EnumEvent: string
+enum EventName: string
 {
 
     case HTML_EVENT_ONABORT             = "onabort";
