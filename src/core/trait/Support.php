@@ -9,24 +9,10 @@ namespace Outline\Plain\Html\Core\Trait;
  */
 trait Support
 {
-    /**
-     * @var string
-     */
-    private string $pattern_one = "#^(false|true|bool|string|int|object|null)+$#i";
-
-    /**
-     * @var string
-     */
-    private string $pattern_two = "#\s#";
-
-    /**
-     * @param bool|string|null $subject
-     * @return bool
-     */
     protected function check_keywords(bool|string|null $subject): bool
     {
         if (is_bool($subject) || is_null($subject)) return true;
-        return preg_match($this->pattern_one, $this->filter_spaces($subject));
+        return (bool)preg_match("#^(false|true|bool|string|int|object|null)+#i", $this->filter_spaces($subject));
     }
 
     /**
@@ -39,7 +25,7 @@ trait Support
         return match ($position) {
             "r" => rtrim($subject),
             "l" => ltrim($subject),
-            "a" => preg_replace($this->pattern_two, "", $subject),
+            "a" => preg_replace("#\s#", "", $subject),
             default => $subject
         };
     }
@@ -53,8 +39,10 @@ trait Support
     {
         $replace = is_null($replace) ? "" : $replace;
         if (is_bool($subject) || is_null($subject)) return $replace;
-        if ($this->filter_spaces($subject)) {
-            $subject = preg_replace($this->pattern_one, $replace, $this->filter_spaces($subject));
+        if ($this->check_keywords($subject)) {
+            $subject = preg_replace("#^(false|true|bool|string|int|object|null)+#i",
+                $replace,
+                $this->filter_spaces($subject));
         }
         return $subject;
     }
@@ -101,10 +89,18 @@ trait Support
 
     /**
      * @param $subject
-     * @return string "numeric"
+     * @return string "string numeric"
      */
     protected function conversion_numeric($subject): string
     {
         return is_numeric($subject) ? "$subject" : "0";
+    }
+
+    /**
+     * @return string an empty space \x20
+     */
+    protected function space(): string
+    {
+        return "\x20";
     }
 }

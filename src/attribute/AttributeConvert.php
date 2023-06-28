@@ -76,7 +76,7 @@ class AttributeConvert
             AttributeName::ATT_MINLENGTH => $this->conversion_numeric($value),
             default => "$value"
         };
-        return is_string($value) ? $this->value($this->filter_keywords($value,"invalid")) : $value;
+        return is_string($value) ? $this->value($this->filter_keywords($value,"")) : $value;
     }
 
     /**

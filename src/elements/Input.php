@@ -19,10 +19,12 @@ final class Input extends Element
         parent::__construct(ElementName::HTML_INPUT);
     }
 
-    public function txt(string $id): string
+    public function txt(string $id, string $class): string
     {
         $this->attribute(
             new Attribute(AttributeName::ATT_TYPE, InputType::INPUT_TYPE_TEXT->value),
+            new Attribute(AttributeName::GLOBAL_ATT_CLASS, $class),
+            new Attribute(AttributeName::GLOBAL_ATT_CLASS, "class3"),
             new Attribute(AttributeName::GLOBAL_ATT_ID, $id),
             new Attribute(AttributeName::ATT_REQUIRED, true)
         );

@@ -4,12 +4,15 @@ namespace Outline\Plain\Html\Attribute;
 
 use Outline\Plain\Html\Core\Enumeration\AttributeName;
 use Outline\Plain\Html\Core\Enumeration\ElementName;
+use Outline\Plain\Html\Core\Trait\Support;
 
 /**
  * @author Jefferson Silva Santos
  */
 class AttributeApplier
 {
+    use Support;
+
     /**
      * @var ElementName
      */
@@ -30,10 +33,7 @@ class AttributeApplier
      */
     private null|string $attribute;
 
-    /**
-     * @var array
-     */
-    private array $attributes;
+    private array $attribute_storage;
 
     /**
      * @param ElementName $element
@@ -43,7 +43,7 @@ class AttributeApplier
         $this->element = $element;
         $this->id = null;
         $this->attribute = null;
-        $this->attributes = [];
+        $this->attribute_storage = ['attributes' => [], 'data' => []];
         $this->attributeConvert = new AttributeConvert();
     }
 
@@ -53,19 +53,45 @@ class AttributeApplier
      */
     public function setAttribute(array $attributes): void
     {
-        $data = [];
+        $classes_storage = [];
         foreach ($attributes as $attribute) {
-            if (!is_null($this->attributeConvert->convert($attribute))) {
-                if (!in_array($attribute->name(), $this->attributes)) {
-                    $this->attributes[] = $attribute->name();
-                    if ($this->permission($attribute)){
-                        if (AttributeName::GLOBAL_ATT_ID->value == $attribute->name()) $this->id = $attribute->value();
-                        $data[] = $this->attributeConvert->convert($attribute);
+            if (!is_null($this->attributeConvert->convert($attribute))){
+                match ($attribute->name()) {
+                    AttributeName::GLOBAL_ATT_CLASS->value => $classes_storage[] = $attribute->value(),
+                    default => $this->storage($attribute)
+                };
+            }
+        }
+        $class = new Attribute(AttributeName::GLOBAL_ATT_CLASS, implode($this->space(), $classes_storage));
+        if (!empty($classes_storage) && $this->permission($class)) {
+            $this->attribute_storage['data'][] = $this->attributeConvert->convert($class);
+        }
+        $this->attribute = implode($this->space(), $this->attribute_storage['data']);
+        $this->storage(null);
+    }
+
+    /**
+     * @param Attribute|null $action
+     * @return void
+     */
+    private function storage(Attribute|null $action): void
+    {
+        if ($action instanceof Attribute){
+            if (!in_array($action->name(), $this->attribute_storage)) {
+                if ($this->permission($action)) {
+                    if ($action->name() == AttributeName::GLOBAL_ATT_ID->value) {
+                        $this->id = $action->value();
                     }
+                    $this->attribute_storage['attributes'][] = $action->name();
+                    $this->attribute_storage['data'][] = $this->attributeConvert->convert($action);
                 }
             }
         }
-        $this->attribute = implode(" ", $data);
+        if (is_null($action)) {
+            $this->attribute_storage['attributes'] = [];
+            $this->attribute_storage['data'] = [];
+        }
+
     }
 
     /**
@@ -73,7 +99,7 @@ class AttributeApplier
      */
     private function attribute(): string
     {
-        return empty($this->attribute) ? "" : "\t".$this->attribute;
+        return empty($this->attribute) ? "" : ($this->space() . $this->attribute);
     }
 
     /**
@@ -90,7 +116,9 @@ class AttributeApplier
             "GLOBAL_ATT_ACCESSKEY"       => [],
             "GLOBAL_ATT_AUTOCAPITALIZE"  => [],
             "GLOBAL_ATT_AUTOFOCUS"       => [],
-            "GLOBAL_ATT_CLASS"           => [],
+            "GLOBAL_ATT_CLASS"           => [
+                ElementName::HTML_INPUT
+            ],
             "GLOBAL_ATT_CONTENTEDITABLE" => [],
             "GLOBAL_ATT_DATA"            => [],
             "GLOBAL_ATT_DIR"             => [],

@@ -33,16 +33,22 @@ class Plain
         }
     }
 
-    public function input_txt(string $id): void
+    public function input_txt(string $id, string $class): void
     {
         if($this->check_id($id)){
             $this->ids[] = $id;
-            $this->elements[] = $this->input->txt($id);
+            $this->elements[] = $this->input->txt($id, $class);
+//            echo $this->input->txt($id, $class);
         }
     }
 
     public function get_elements(): array
     {
         return $this->elements;
+    }
+
+    public function getIds()
+    {
+        return $this->ids;
     }
 }
