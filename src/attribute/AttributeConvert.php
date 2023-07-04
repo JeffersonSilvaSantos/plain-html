@@ -74,9 +74,11 @@ class AttributeConvert
             AttributeName::ATT_MAXLENGTH,
             AttributeName::ATT_MIN,
             AttributeName::ATT_MINLENGTH => $this->conversion_numeric($value),
+            AttributeName::ATT_PLACEHOLDER =>
+            $this->filter_keywords($value,"invalid") == 'invalid' ? "write here..." : $value,
             default => "$value"
         };
-        return is_string($value) ? $this->value($this->filter_keywords($value,"")) : $value;
+        return is_string($value) ? $this->value($this->filter_keywords($value,"invalid")) : $value;
     }
 
     /**

@@ -19,23 +19,38 @@ final class Input extends Element
         parent::__construct(ElementName::HTML_INPUT);
     }
 
-    public function txt(string $id, string $class): string
+    //in development
+    public function input(InputType $inputType, string $id, string $class, Attribute ...$additional): string
+    {
+        return $this->element_opening().$this->element_closing();
+    }
+
+    //in development
+    public function required_attributes(string $id, string $class, $type)
+    {
+        $this->attribute($id, $class,
+            new Attribute(AttributeName::ATT_TYPE, $type)
+        );
+    }
+
+    public function txt(string $id, string $class, bool $required): string
     {
         $this->attribute(
+            $id,
+            $class,
             new Attribute(AttributeName::ATT_TYPE, InputType::INPUT_TYPE_TEXT->value),
-            new Attribute(AttributeName::GLOBAL_ATT_CLASS, $class),
-            new Attribute(AttributeName::GLOBAL_ATT_CLASS, "class3"),
-            new Attribute(AttributeName::GLOBAL_ATT_ID, $id),
-            new Attribute(AttributeName::ATT_REQUIRED, true)
+            new Attribute(AttributeName::ATT_REQUIRED, $required)
         );
         return $this->element_opening().$this->element_closing();
     }
 
-    public function password(string $id): string
+    public function password(string $id, string $class): string
     {
         $this->attribute(
+            $id,
+            $class,
             new Attribute(AttributeName::ATT_TYPE, InputType::INPUT_TYPE_PASSWORD->value),
-            new Attribute(AttributeName::GLOBAL_ATT_ID, $id),
+            new Attribute(AttributeName::ATT_REQUIRED, true)
         );
         return $this->element_opening().$this->element_closing();
     }

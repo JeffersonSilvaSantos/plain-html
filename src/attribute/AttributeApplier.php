@@ -33,7 +33,15 @@ class AttributeApplier
      */
     private null|string $attribute;
 
+    /**
+     * @var array[]
+     */
     private array $attribute_storage;
+
+    /**
+     * @var array
+     */
+    private array $classes_storage;
 
     /**
      * @param ElementName $element
@@ -43,6 +51,7 @@ class AttributeApplier
         $this->element = $element;
         $this->id = null;
         $this->attribute = null;
+        $this->classes_storage = [];
         $this->attribute_storage = ['attributes' => [], 'data' => []];
         $this->attributeConvert = new AttributeConvert();
     }
@@ -54,20 +63,38 @@ class AttributeApplier
     public function setAttribute(array $attributes): void
     {
         $classes_storage = [];
+
         foreach ($attributes as $attribute) {
             if (!is_null($this->attributeConvert->convert($attribute))){
                 match ($attribute->name()) {
-                    AttributeName::GLOBAL_ATT_CLASS->value => $classes_storage[] = $attribute->value(),
+                    AttributeName::GLOBAL_ATT_CLASS->value => $classes_storage = $this->many_classes($attribute->value(),$classes_storage),
                     default => $this->storage($attribute)
                 };
             }
         }
-        $class = new Attribute(AttributeName::GLOBAL_ATT_CLASS, implode($this->space(), $classes_storage));
-        if (!empty($classes_storage) && $this->permission($class)) {
+
+        $class_value = implode($this->space(), $classes_storage);
+        $class = new Attribute(AttributeName::GLOBAL_ATT_CLASS, $class_value);
+
+        if (!empty($classes_storage) && $this->permission($class) && !empty($class_value)) {
             $this->attribute_storage['data'][] = $this->attributeConvert->convert($class);
         }
         $this->attribute = implode($this->space(), $this->attribute_storage['data']);
         $this->storage(null);
+    }
+
+    /**
+     * @param string $class
+     * @param array $array
+     * @return array
+     */
+    private function many_classes(string $class, array $array): array
+    {
+        $class = $this->filter_keywords($class,"");
+        if (!in_array($class, $array)) {
+            $array[] = $class;
+        }
+        return $array;
     }
 
     /**
@@ -77,10 +104,10 @@ class AttributeApplier
     private function storage(Attribute|null $action): void
     {
         if ($action instanceof Attribute){
-            if (!in_array($action->name(), $this->attribute_storage)) {
+            if (!in_array($action->name(), $this->attribute_storage['attributes'])) {
                 if ($this->permission($action)) {
                     if ($action->name() == AttributeName::GLOBAL_ATT_ID->value) {
-                        $this->id = $action->value();
+                        $this->id = $this->filter_keywords($action->value(),"invalid");
                     }
                     $this->attribute_storage['attributes'][] = $action->name();
                     $this->attribute_storage['data'][] = $this->attributeConvert->convert($action);
@@ -163,7 +190,9 @@ class AttributeApplier
             "ATT_REQUIRED"               => [
                 ElementName::HTML_INPUT
             ],
-            "ATT_PLACEHOLDER"            => [],
+            "ATT_PLACEHOLDER"            => [
+                ElementName::HTML_INPUT
+            ],
             "ATT_SIZE"                   => [],
             "ATT_STEP"                   => [],
             "ATT_NAME"                   => [],
@@ -194,6 +223,9 @@ class AttributeApplier
         return "<".$this->element->value;
     }
 
+    /**
+     * @return string
+     */
     private function close(): string
     {
         return ">";
@@ -206,6 +238,10 @@ class AttributeApplier
     {
         return $this->id;
     }
+
+    /**
+     * @return string
+     */
     public function opening(): string
     {
         return $this->open().$this->attribute().$this->close();

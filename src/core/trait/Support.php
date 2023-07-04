@@ -9,10 +9,19 @@ namespace Outline\Plain\Html\Core\Trait;
  */
 trait Support
 {
+    /**
+     * @var string
+     */
+    private string $pattern = "#^(false\s|true\s|bool|string\s|int\s|object\s|null\s)+|^(false|true|bool|string|int|object|null)+$#i";
+
+    /**
+     * @param bool|string|null $subject
+     * @return bool
+     */
     protected function check_keywords(bool|string|null $subject): bool
     {
         if (is_bool($subject) || is_null($subject)) return true;
-        return (bool)preg_match("#^(false|true|bool|string|int|object|null)+#i", $this->filter_spaces($subject));
+        return (bool)preg_match($this->pattern, $subject);
     }
 
     /**
@@ -40,11 +49,9 @@ trait Support
         $replace = is_null($replace) ? "" : $replace;
         if (is_bool($subject) || is_null($subject)) return $replace;
         if ($this->check_keywords($subject)) {
-            $subject = preg_replace("#^(false|true|bool|string|int|object|null)+#i",
-                $replace,
-                $this->filter_spaces($subject));
+            $subject = preg_replace($this->pattern, $replace, $subject);
         }
-        return $subject;
+        return $this->filter_spaces($subject,'l');
     }
 
     /**

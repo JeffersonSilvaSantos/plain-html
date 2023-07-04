@@ -6,6 +6,7 @@ namespace Outline\Plain\Html\Core\Abstraction;
 
 use Outline\Plain\Html\Attribute\Attribute;
 use Outline\Plain\Html\Attribute\AttributeApplier;
+use Outline\Plain\Html\Core\Enumeration\AttributeName;
 use Outline\Plain\Html\Core\Enumeration\ElementName;
 
 /**
@@ -13,10 +14,6 @@ use Outline\Plain\Html\Core\Enumeration\ElementName;
  */
 abstract class Element
 {
-    /**
-     * @var ElementName
-     */
-    private ElementName $element;
 
     /**
      * @var AttributeApplier
@@ -36,8 +33,6 @@ abstract class Element
         $this->applier = new AttributeApplier($element);
         $this->close = $this->config_closing_element($element);
     }
-
-    //abstract function setKay(): string;
 
     /**
      * @param ElementName $element
@@ -61,11 +56,17 @@ abstract class Element
     }
 
     /**
+     * @param string $id
+     * @param string $class
      * @param Attribute ...$attribute
      * @return void
      */
-    protected function attribute(Attribute ...$attribute): void
+    protected function attribute(string $id, string $class, Attribute ...$attribute): void
     {
+        $id = new Attribute(AttributeName::GLOBAL_ATT_ID, $id);
+        $class = new Attribute(AttributeName::GLOBAL_ATT_CLASS, $class);
+        $attribute[] = $id;
+        $attribute[] = $class;
         $this->applier->setAttribute($attribute);
     }
 
